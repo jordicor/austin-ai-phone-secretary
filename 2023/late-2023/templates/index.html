@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live Transcription with Twilio Media Streams</title>
+  </head>
+  <body>
+    <h1>Live Transcription with Twilio Media Streams</h1>
+    <h3>
+      Call your Twilio Number, start talking and watch your words magically
+      appear.
+    </h3>
+    <p id="transcription-container"></p>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {
+        const socket = io();
+        socket.on('interim-transcription', function (data) {
+          document.getElementById("transcription-container").innerHTML = data.text;
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+import openai
+import os
+
+# Configura tu clave de API de OpenAI
+openai.api_key ='<OPENAI_API_KEY>'
+API_ENDPOINT = "https://api.openai.com/v1/chat/completions"
+
+# Inicia el inventario
+inventory = {}
+hand = None
+
+# Define una función para manejar el inventario y la mano
+def handle_objects(action, item):
+    global hand
+    success = True
+    if action == 'encontrar':
+        if item in inventory:
+            inventory[item] += 1
+        else:
+            inventory[item] = 1
+        print(f"Has encontrado el objeto: {item} y lo has guardado en el inventario")
+    elif action == 'coger':
+        if hand is not None:
+            print(f"Ya tienes el objeto: {hand} en la mano. Debes usar o guardar antes de coger otro objeto.")
+            success = False
+        else:
+            if item in inventory and inventory[item] > 0:
+                inventory[item] -= 1
+                hand = item
+                print(f"Has cogido el objeto: {item} del inventario")
+            else:
+                print(f"No tienes el objeto: {item} en tu inventario para coger")
+                success = False
+    elif action == 'usar':
+        if hand == item:
+            print(f"Has usado el objeto: {item}")
+        else:
+            print(f"No tienes el objeto: {item} en la mano para usar")
+            success = False
+    elif action == 'guardar':
+        if hand == item:
+            inventory[item] += 1
+            hand = None
+            print(f"Has guardado el objeto: {item} en el inventario")
+        else:
+            print(f"No tienes el objeto: {item} en la mano para guardar")
+            success = False
+    return inventory, hand, success
+
+# Interactúa con el modelo
+# Inicia una nueva conversación
+conversation = [
+    {"role": "system", "content": "Imagina que eres un personaje de un videojuego. Tendrás diferentes opciones a elegir para resolver unos problemas. Busca cual es el objeto necesario para resolver tu problema. Solo puedes coger un objeto cuando los encuentres. Puedes realizar varias acciones a la vez con el mismo objeto o si debes soltar un objeto si pueden ser objetos diferentes. Por favor, responde con una serie de comandos separados por comas, cada uno de los cuales contiene una acción y un objeto. Por ejemplo, 'Encontrar manzana, Coger manzana, Usar manzana, Guardar manzana'. Recuerda que solo puedes coger el item del inventario si no tienes nada en la mano, solo puedes usar el item si lo tienes en la mano, y solo puedes guardar el item en el inventario si lo tienes en la mano."},
+]
+
+while True:
+    message = input("Tú: ")
+    conversation.append({"role": "user", "content": message})
+
+    response = openai.ChatCompletion.create(
+        #model="gpt-3.5-turbo",
+        model="gpt-4-0613",
+        messages=conversation,
+    )
+
+    response_message = response['choices'][0]['message']['content'].strip() # obtén el texto de la respuesta
+    actions = response_message.split(', ')  # divide el texto en acciones
+
+    # Supón que cada acción es una frase que contiene una acción y un objeto
+    for action in actions:
+        words = action.split()  # divide la frase en palabras
+        if len(words) >= 2:  # solo procesa la frase si contiene al menos una acción y un objeto
+            action = words[0].lower()
+            item = ' '.join(words[1:]).rstrip('.')  # toma todo después de la primera palabra como el objeto y elimina los puntos del final
+            inventory, hand, success = handle_objects(action, item)
+            if not success:
+                break
+
+    print("ChatGPT: ", response_message)
+    print("Inventario: ", inventory)
+    print("En la mano: ", hand)
+
+    # Añade la respuesta del modelo a la conversación para que pueda ver su propia respuesta cuando genera la próxima
+    conversation.append({"role": "assistant", "content": response_message})

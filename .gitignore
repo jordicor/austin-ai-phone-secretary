@@ -1,0 +1,14 @@
+# Local secrets
+config.py
+.env
+static/sec/
+*.pem
+g_credentials.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# macOS
+.DS_Store
