@@ -8,10 +8,15 @@ Call screening itself was already around: Google has shipped Call Screen on Pixe
 
 ## Listen
 
-Two recordings of the same call, made in July 2023. They are in Spanish; [2023/demo/transcript.md](2023/demo/transcript.md) has the transcript with an English translation.
+Two recordings of the same call, made in July 2023. They are in Spanish; [2023/demo/transcript.md](2023/demo/transcript.md) has the transcript with an English translation, and the files are in [2023/demo](2023/demo).
 
-- [Austin-demo.mp4](2023/demo/Austin-demo.mp4) (2:22), the caller's side. "Pepe" (me, testing it) calls about an electricity bill. Austin asks for his name, the reason, the details and the company, one question at a time, and puts him on hold. After checking with me, it asks him to call back in half an hour.
-- [Austin-demo-2.mp4](2023/demo/Austin-demo-2.mp4) (0:18), my side. Austin calls me: *"Pepe de Endesa está en línea para comentar algo sobre una factura de la luz. ¿Deseas atender la llamada?"* I say I can't right now, and it cancels the transfer.
+**The caller's side (2:22).** "Pepe" (me, testing it) calls about an electricity bill. Austin asks for his name, the reason, the details and the company, one question at a time, and puts him on hold. After checking with me, it asks him to call back in half an hour.
+
+https://github.com/user-attachments/assets/9783f374-da0c-44a9-8ba7-1d291959b629
+
+**My side (0:18).** Austin calls me: *"Pepe de Endesa está en línea para comentar algo sobre una factura de la luz. ¿Deseas atender la llamada?"* I say I can't right now, and it cancels the transfer.
+
+https://github.com/user-attachments/assets/06287b4d-304d-4963-9c5b-fd03cf7e3c7e
 
 The silences between turns are the real latency of 2023: speech-to-text, GPT-4 and text-to-speech, one after the other, over a phone line.
 
